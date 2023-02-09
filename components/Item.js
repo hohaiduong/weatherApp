@@ -1,18 +1,21 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { View, Text, Image, StyleSheet, Alert, TextInput, AppState } from 'react-native';
-import { width, height } from './utils';
+import { width, height, API_KEY } from './utils';
 
 import Icon from "react-native-vector-icons/Ionicons";
+import { AsyncStorage } from '@react-native-async-storage/async-storage';
 const ItemLoad = () => {
     var [data, setData] = useState([]);
+    var [data2, setData2] = useState([]);
+    var [dataIcon, setDataIcon] = useState([]);
+    //===============================================
     var [loaded, setLoaded] = useState(false);
+    var [City, setCity] = useState("");
     const [cityName, setCityName] = useState("");
 
     useEffect(() => {
         LoadWeather()
     }, [])
-
-   
 
     const LoadWeather = async (cityName) => {
         const options = {
@@ -24,14 +27,35 @@ const ItemLoad = () => {
             }
         };
 
-        await fetch('https://weatherapi-com.p.rapidapi.com/current.json?q='+ cityName + '$days=3', options)
+        await fetch('https://weatherapi-com.p.rapidapi.com/current.json?q=' + cityName + '$days=3', options)
             .then(response => response.json())
             .then(response => {
-                setData(response);
+                setData(response.location);
+                setData2(response.current);
+                setDataIcon(response.current.condition);
             }
             )
             .catch(err => console.error(err));
     };
+
+    const setData3 = async () => {
+        await AsyncStorage.setItem("@City", JSON.stringify(cityName));
+    }
+
+    useEffect(() => {
+        getData();
+        console.log(City);
+    }, [])
+    const getData = async () => {
+        await AsyncStorage.getItem("@City")
+            .then(
+                value => {
+                    if (value != null) {
+                        setCity(value)
+                    }
+                }
+            )
+    }
 
     return (
         <View>
@@ -47,30 +71,30 @@ const ItemLoad = () => {
             </View>
             <View style={styles.containerView}>
                 <View style={{ marginTop: 50 }}>
-                    <Text style={styles.textName}>{`${data.location.name}`}</Text>
+                    <Text style={styles.textName}>{`${data.name}`}</Text>
                 </View>
                 <View style={styles.viewTemp}>
-                    <Image style={{ width: 70, height: 70 }} source={{ uri: "https:" + `${data.current.condition.icon}` }}></Image>
-                    <Text style={styles.textTemp}> {`${data.current.temp_c}`} độ C</Text>
+                    <Image style={{ width: 70, height: 70 }} source={{ uri: "https:" + `${dataIcon.icon}` }}></Image>
+                    <Text style={styles.textTemp}> {`${data2.temp_c}`} độ C</Text>
                 </View>
                 <View style={styles.viewFlexRow}>
                     <View style={styles.containerCenter}>
                         <Image source={require('./img/cloud.jpg')} style={styles.imgItem}></Image>
-                        <Text style={styles.textContent}>Mây: {`${data.current.cloud}`} </Text>
+                        <Text style={styles.textContent}>Mây: {`${data2.cloud}`} </Text>
                     </View>
                     <View style={[styles.containerCenter, { marginLeft: 50 }]}>
                         <Image source={require('./img/tocdogio.png')} style={styles.imgItem}></Image>
-                        <Text style={styles.textContent}>Tốc độ gió: {`${data.current.wind_mph}`} mph</Text>
+                        <Text style={styles.textContent}>Tốc độ gió: {`${data2.wind_mph}`} mph</Text>
                     </View>
                 </View>
                 <View style={styles.viewFlexRow}>
                     <View style={styles.containerCenter}>
                         <Image source={require('./img/doam.png')} style={styles.imgItem}></Image>
-                        <Text style={styles.textContent}>Độ ẩm: {`${data.current.humidity}`}% </Text>
+                        <Text style={styles.textContent}>Độ ẩm: {`${data2.humidity}`}% </Text>
                     </View>
                     <View style={[styles.containerCenter, { marginLeft: 50 }]}>
                         <Image source={require('./img/feelslike.png')} style={styles.imgItem}></Image>
-                        <Text style={styles.textContent}>Cảm giác như: {`${data.current.feelslike_c}`} độ</Text>
+                        <Text style={styles.textContent}>Cảm giác như: {`${data2.feelslike_c}`} độ</Text>
                     </View>
                 </View>
             </View>
@@ -86,7 +110,7 @@ const styles = StyleSheet.create({
         backgroundColor: "#FFF",
         alignContent: "center",
         alignItems: "center",
-        borderRadius:15
+        borderRadius: 15
     },
 
     containerView: {
