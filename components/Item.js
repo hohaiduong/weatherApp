@@ -1,36 +1,45 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Image, StyleSheet, Alert, TextInput, AppState } from 'react-native';
-import { width, height, API_KEY } from './utils';
+import { View, Text, Image, StyleSheet, Alert, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 
 import Icon from "react-native-vector-icons/Ionicons";
-<<<<<<< Updated upstream
-import { AsyncStorage } from '@react-native-async-storage/async-storage';
-=======
 import AsyncStorage from '@react-native-async-storage/async-storage';
->>>>>>> Stashed changes
+import styles from './styles';
+
 const ItemLoad = () => {
+    var [cityName, setCityName] = useState("");
     var [data, setData] = useState([]);
     var [data2, setData2] = useState([]);
     var [dataIcon, setDataIcon] = useState([]);
-<<<<<<< Updated upstream
-=======
-    var [jsonValue, setJsonValue] = useState("");
->>>>>>> Stashed changes
+    var [dataVietNam] = useState(["Ha Noi", "Ho Chi Minh", "Hue",
+        "Nha Trang", "Da Lat", "Da Nang"])
+    var [filered, setFiltered] = useState(dataVietNam);
+    //=============================================   
+    var [isSearching, setIsSearching] = useState(false);
+    var onSearch = (text) => {
+        if (text) {
+            setCityName(text);
+            setIsSearching(true);
+
+            const tempList = dataVietNam.filter(item => {
+                if (item.match(text)) return item
+            })
+            setFiltered(tempList)
+        } else {
+            setCityName("")
+            setIsSearching(false);
+            setFiltered(dataVietNam);
+        }
+    }
     //===============================================
     var [loaded, setLoaded] = useState(false);
     var [City, setCity] = useState("");
-    const [cityName, setCityName] = useState("");
 
     useEffect(() => {
-        getData();
-        LoadWeather(jsonValue);
-    }, [jsonValue])
+        getData()
+        LoadWeather(City)
+    }, [City])
 
-<<<<<<< Updated upstream
     const LoadWeather = async (cityName) => {
-=======
-    const LoadWeather = async (cityNamez) => {
->>>>>>> Stashed changes
         const options = {
             method: 'GET',
             headers: {
@@ -40,11 +49,7 @@ const ItemLoad = () => {
             }
         };
 
-<<<<<<< Updated upstream
         await fetch('https://weatherapi-com.p.rapidapi.com/current.json?q=' + cityName + '$days=3', options)
-=======
-        await fetch('https://weatherapi-com.p.rapidapi.com/current.json?q=' + cityNamez + '$days=3', options)
->>>>>>> Stashed changes
             .then(response => response.json())
             .then(response => {
                 setData(response.location);
@@ -55,43 +60,23 @@ const ItemLoad = () => {
             .catch(err => console.error(err));
     };
 
-<<<<<<< Updated upstream
-    const setData3 = async () => {
-        await AsyncStorage.setItem("@City", JSON.stringify(cityName));
-    }
-
-    useEffect(() => {
-        getData();
-        console.log(City);
-    }, [])
-    const getData = async () => {
-        await AsyncStorage.getItem("@City")
-            .then(
-                value => {
-                    if (value != null) {
-                        setCity(value)
-                    }
-                }
-            )
-=======
     const storeData = async (value) => {
         try {
-            const jsonValue = JSON.stringify(value);
-            await AsyncStorage.setItem('City', jsonValue);
+            const jsonValue = JSON.stringify(value)
+            await AsyncStorage.setItem('City', jsonValue)
         } catch (e) {
-            console.log(e);
+            // saving error
         }
     }
 
     const getData = async () => {
         try {
-            const value = await AsyncStorage.getItem('City');
-            setJsonValue(JSON.parse(value));
-            return value != null ? JSON.parse(value) : null; 
+            const jsonValue = await AsyncStorage.getItem('City')
+            setCity(JSON.parse(jsonValue));
+            return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch (e) {
-            console.log(e)
+            // error reading value
         }
->>>>>>> Stashed changes
     }
 
     return (
@@ -100,10 +85,12 @@ const ItemLoad = () => {
                 <TextInput
                     placeholder="Search City"
                     value={cityName}
-                    onChangeText={setCityName}
+                    onChangeText={onSearch}
                     style={{ fontSize: 20, marginLeft: 10 }}
                 />
-                <Icon onPress={() => [LoadWeather(cityName), storeData(cityName)]} name="search-outline" style={{ fontSize: 30, marginRight: 10 }}
+                <Icon onPress={() => [LoadWeather(cityName), storeData(cityName),
+                setIsSearching(false), setCityName("")]} name="search-outline"
+                    style={{ fontSize: 30, marginRight: 10 }}
                 />
             </View>
             <View style={styles.containerView}>
@@ -116,11 +103,7 @@ const ItemLoad = () => {
                 </View>
                 <View style={styles.viewFlexRow}>
                     <View style={styles.containerCenter}>
-<<<<<<< Updated upstream
-                        <Image source={require('./img/cloud.jpg')} style={styles.imgItem}></Image>
-=======
                         <Image source={require('./img/cloud.png')} style={styles.imgItem}></Image>
->>>>>>> Stashed changes
                         <Text style={styles.textContent}>Mây: {`${data2.cloud}`} </Text>
                     </View>
                     <View style={[styles.containerCenter, { marginLeft: 50 }]}>
@@ -139,74 +122,30 @@ const ItemLoad = () => {
                     </View>
                 </View>
             </View>
+            {
+                isSearching &&
+                <View style={styles.containerSearch}>
+                    <View>
+                        {
+                            filered.map(item => {
+                                return (
+                                    <ScrollView>
+                                        <TouchableOpacity onPress={() => {
+                                            [LoadWeather(item), storeData(item),
+                                            setIsSearching(false), setCityName("")]
+                                        }}>
+                                            <Text style={styles.textItemSearch}>{item}</Text>
+                                        </TouchableOpacity>
+                                    </ScrollView>
+                                )
+                            })
+                        }
+                    </View>
+                </View>
+            }
         </View>
     );
 
 }
 
-const styles = StyleSheet.create({
-    containerTextInput: {
-        flexDirection: "row",
-        justifyContent: "space-between",
-        backgroundColor: "#FFF",
-        alignContent: "center",
-        alignItems: "center",
-        borderRadius: 15
-    },
-
-    containerView: {
-        width: width,
-        height: height,
-        alignItems: "center"
-    },
-
-    containerCenter: {
-        backgroundColor: "#87CEEB",
-        alignItems: "center",
-        // alignContent: "center",
-        padding: 10,
-        borderRadius: 10,
-        width: 150,
-        opacity: 0.8
-
-    },
-
-    viewTemp: {
-        alignItems: "center",
-        flexDirection: "row",
-        marginTop: 100
-    },
-    viewFlexRow: {
-        flexDirection: "row",
-        marginTop: 60
-    },
-
-
-    textTemp: {
-        color: "black",
-        fontSize: 20,
-        fontStyle: "italic",
-        fontWeight: "900"
-    },
-    textName: {
-        fontFamily: "Roboto",
-        fontSize: 30,
-        color: "#00008B"
-    },
-
-    textContent: {
-        color: "black",
-        textAlign: "center",
-        fontSize: 20
-    },
-
-    imgItem: {
-        width: 50,
-        height: 50
-    }
-
-});
-
 export default ItemLoad;
-
-// 
