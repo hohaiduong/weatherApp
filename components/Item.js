@@ -35,6 +35,7 @@ const ItemLoad = () => {
     //===============================================
     var [loaded, setLoaded] = useState(false);
     var [City, setCity] = useState("");
+
     useEffect(() => {
         getData()
         LoadWeather(City)
@@ -145,10 +146,11 @@ const ItemLoad = () => {
                     </View>
                 </View>
             }
-            
         </View>
     );
 
 }
 
+
 export default ItemLoad; 
+
