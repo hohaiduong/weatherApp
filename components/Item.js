@@ -5,6 +5,8 @@ import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './styles';
 
+import MyService from './MyService.js';
+
 const ItemLoad = () => {
     var [cityName, setCityName] = useState("");
     var [data, setData] = useState([]);
@@ -81,6 +83,7 @@ const ItemLoad = () => {
 
     return (
         <View>
+            <MyService/>
             <View style={styles.containerTextInput}>
                 <TextInput
                     placeholder="Search City"
@@ -148,4 +151,6 @@ const ItemLoad = () => {
 
 }
 
-export default ItemLoad;
+
+export default ItemLoad; 
+
