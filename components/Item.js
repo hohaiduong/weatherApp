@@ -1,9 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { View, Text, Image, StyleSheet, Alert, TextInput, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, Image, TextInput, TouchableOpacity, ScrollView } from 'react-native';
 
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import styles from './styles';
+
+import MyService from './MyService.js';
 
 const ItemLoad = () => {
     var [cityName, setCityName] = useState("");
@@ -33,7 +35,6 @@ const ItemLoad = () => {
     //===============================================
     var [loaded, setLoaded] = useState(false);
     var [City, setCity] = useState("");
-
     useEffect(() => {
         getData()
         LoadWeather(City)
@@ -81,6 +82,7 @@ const ItemLoad = () => {
 
     return (
         <View>
+            <MyService/>
             <View style={styles.containerTextInput}>
                 <TextInput
                     placeholder="Search City"
@@ -143,9 +145,10 @@ const ItemLoad = () => {
                     </View>
                 </View>
             }
+            
         </View>
     );
 
 }
 
-export default ItemLoad;
+export default ItemLoad; 
