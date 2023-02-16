@@ -3,6 +3,7 @@ import { View, Text, Image, TextInput, TouchableOpacity, ScrollView } from 'reac
 
 import Icon from "react-native-vector-icons/Ionicons";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import styles from './styles';
 
 import MyService from './MyService.js';
@@ -12,11 +13,13 @@ const ItemLoad = () => {
     var [data, setData] = useState([]);
     var [data2, setData2] = useState([]);
     var [dataIcon, setDataIcon] = useState([]);
-    var [dataVietNam] = useState(["Ha Noi", "Ho Chi Minh", "Hue",
+    var [dataVietNam] = useState(["Ha Noi", "Ho Chi Minh", "Thua Thien Hue",
         "Nha Trang", "Da Lat", "Da Nang"])
     var [filered, setFiltered] = useState(dataVietNam);
     //=============================================   
     var [isSearching, setIsSearching] = useState(false);
+    var [dataName, setDataName] = useState("");
+    // var dataName = data.name;
     var onSearch = (text) => {
         if (text) {
             setCityName(text);
@@ -40,6 +43,7 @@ const ItemLoad = () => {
         getData()
         LoadWeather(City)
     }, [City])
+
 
     const LoadWeather = async (cityName) => {
         const options = {
@@ -83,7 +87,7 @@ const ItemLoad = () => {
 
     return (
         <View>
-            <MyService/>
+            <MyService dataName = {dataName}/>
             <View style={styles.containerTextInput}>
                 <TextInput
                     placeholder="Search City"
@@ -92,7 +96,7 @@ const ItemLoad = () => {
                     style={{ fontSize: 20, marginLeft: 10 }}
                 />
                 <Icon onPress={() => [LoadWeather(cityName), storeData(cityName),
-                setIsSearching(false), setCityName("")]} name="search-outline"
+                setIsSearching(false), setCityName(""), setDataName(data.name)]} name="search-outline"
                     style={{ fontSize: 30, marginRight: 10 }}
                 />
             </View>
@@ -135,10 +139,12 @@ const ItemLoad = () => {
                                     <ScrollView>
                                         <TouchableOpacity onPress={() => {
                                             [LoadWeather(item), storeData(item),
-                                            setIsSearching(false), setCityName("")]
+                                            setIsSearching(false), setCityName(""),
+                                             setDataName(item)]
                                         }}>
                                             <Text style={styles.textItemSearch}>{item}</Text>
                                         </TouchableOpacity>
+                                        
                                     </ScrollView>
                                 )
                             })
