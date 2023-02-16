@@ -19,7 +19,7 @@ const ItemLoad = () => {
     //=============================================   
     var [isSearching, setIsSearching] = useState(false);
     var [dataName, setDataName] = useState("");
-    // var dataName = data.name;
+
     var onSearch = (text) => {
         if (text) {
             setCityName(text);
@@ -41,6 +41,7 @@ const ItemLoad = () => {
 
     useEffect(() => {
         getData()
+        setDataName(City)
         LoadWeather(City)
     }, [City])
 
@@ -87,7 +88,7 @@ const ItemLoad = () => {
 
     return (
         <View>
-            <MyService dataName = {dataName}/>
+             <MyService dataName={dataName} />
             <View style={styles.containerTextInput}>
                 <TextInput
                     placeholder="Search City"
@@ -105,8 +106,8 @@ const ItemLoad = () => {
                     <Text style={styles.textName}>{`${data.name}`}</Text>
                 </View>
                 <View style={styles.viewTemp}>
-                    <Image style={{ width: 70, height: 70 }} source={{ uri: "https:" + `${dataIcon.icon}` }}></Image>
-                    <Text style={styles.textTemp}> {`${data2.temp_c}`} độ C</Text>
+                    <Image style={{ width: 100, height: 100 }} source={{ uri: "https:" + `${dataIcon.icon}` }}></Image>
+                    <Text style={styles.textTemp}> {`${data2.temp_c}`} °C</Text>
                 </View>
                 <View style={styles.viewFlexRow}>
                     <View style={styles.containerCenter}>
@@ -125,7 +126,7 @@ const ItemLoad = () => {
                     </View>
                     <View style={[styles.containerCenter, { marginLeft: 50 }]}>
                         <Image source={require('./img/feelslike.png')} style={styles.imgItem}></Image>
-                        <Text style={styles.textContent}>Cảm giác như: {`${data2.feelslike_c}`} độ</Text>
+                        <Text style={styles.textContent}>Cảm giác như: {`${data2.feelslike_c}`} °C</Text>
                     </View>
                 </View>
             </View>
@@ -140,11 +141,11 @@ const ItemLoad = () => {
                                         <TouchableOpacity onPress={() => {
                                             [LoadWeather(item), storeData(item),
                                             setIsSearching(false), setCityName(""),
-                                             setDataName(item)]
+                                            setDataName(item)]
                                         }}>
                                             <Text style={styles.textItemSearch}>{item}</Text>
                                         </TouchableOpacity>
-                                        
+
                                     </ScrollView>
                                 )
                             })
@@ -152,11 +153,12 @@ const ItemLoad = () => {
                     </View>
                 </View>
             }
+           
         </View>
     );
 
 }
 
 
-export default ItemLoad; 
+export default ItemLoad;
 

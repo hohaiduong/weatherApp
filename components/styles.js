@@ -20,9 +20,8 @@ const styles = StyleSheet.create({
     },
 
     containerCenter: {
-        backgroundColor: "#87CEEB",
+        backgroundColor: "#FFF",
         alignItems: "center",
-        // alignContent: "center",
         padding: 10,
         borderRadius: 10,
         width: 150,
@@ -33,7 +32,7 @@ const styles = StyleSheet.create({
     containerSearch: {
         position: "absolute",
         alignSelf: "center",
-        marginTop: 50,
+        marginTop: 122,
         backgroundColor: "#FFF",
         width: width - 21 ,
         borderBottomLeftRadius: 30,
@@ -44,7 +43,7 @@ const styles = StyleSheet.create({
     viewTemp: {
         alignItems: "center",
         flexDirection: "row",
-        marginTop: 100
+        marginTop: 50
     },
     viewFlexRow: {
         flexDirection: "row",
@@ -53,24 +52,27 @@ const styles = StyleSheet.create({
 
 
     textTemp: {
-        color: "black",
-        fontSize: 20,
+        fontFamily: "Roboto",
+        color: "#FFF",
+        fontSize: 40,
         fontStyle: "italic",
         fontWeight: "900"
     },
     textName: {
         fontFamily: "Roboto",
-        fontSize: 30,
-        color: "#00008B"
+        fontSize: 25,
+        color: "#FFF"
     },
 
     textContent: {
+        fontFamily: "Roboto",
         color: "black",
         textAlign: "center",
         fontSize: 20
     },
 
     textItemSearch: {
+        fontFamily: "Roboto",
         fontSize: 25,
         color: "#000",
         marginTop: 5,
