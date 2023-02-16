@@ -17,17 +17,14 @@ import {
 
 import ItemLoad from './components/Item';
 import { width, height } from './components/utils';
-const img = { uri: "https://hinhanhdephd.com/wp-content/uploads/2017/06/top-100-hinh-nen-thien-nhien-phong-canh-dep-3.jpg" };
+// const img = { uri: "https://hinhanhdephd.com/wp-content/uploads/2017/06/top-100-hinh-nen-thien-nhien-phong-canh-dep-3.jpg" };
 
 
 const App = () => {
 
   return (
     <SafeAreaView>
-      <ImageBackground source={img} resizeMode="cover" style={styles.background}>
-        <View style={styles.containerTitle}>
-          <Text style={styles.title}>THỜI TIẾT HÔM NAY</Text>
-        </View>
+      <ImageBackground source={require('./components/img/bgr.png')} resizeMode="cover" style={styles.background}>
         <ItemLoad />
       </ImageBackground>
     </SafeAreaView>
