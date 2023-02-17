@@ -4,14 +4,17 @@ import { SafeAreaView, View, TouchableOpacity, StyleSheet, Text } from 'react-na
 import BackgroundJob from 'react-native-background-actions'
 import Icon from "react-native-vector-icons/Ionicons";
 // import { Container } from './styles';
-
+import { showNotification, createChannel } from './pushNotification';
 const MyService = (props) => {
     const sleep = (time) => new Promise((resolve) => setTimeout(() => resolve(), time));
     var temp = "";
     var name = "";
+    var localtime = "";
     var [isRunning, setIsRunning] = useState(false)
     var { dataName } = props;
-
+    useEffect(() => {
+      createChannel()
+    }, [])
     const veryIntensiveTask = async (taskDataArguments) => {
         // Example of an infinite loop task
         const { delay } = taskDataArguments;
@@ -31,15 +34,21 @@ const MyService = (props) => {
                     .then(response => {
                         temp = response.current.temp_c;
                         name = response.location.name;
+                        localtime = response.location.localtime_epoch;
                     }
                     )
                     .catch(err => console.error(err));
                 BackgroundJob.updateNotification({ taskTitle: "Nhiệt độ tại " + name + " bây giờ là: " + temp + "°C"})
-                if (temp > 30) { BackgroundJob.updateNotification({ taskDesc: "Thiệc sự là nóng quá đi mà. Đem cái máy lạnh ra đây coai!!" }) }
+
+                if (temp > 30) { 
+                    showNotification("Thời tiết", "Thiệc sự là nóng quá đi mà. Đem cái máy lạnh ra đây coai!!")
+                    BackgroundJob.updateNotification({ taskDesc: "Thiệc sự là nóng quá đi mà. Đem cái máy lạnh ra đây coai!!" }) }
                 else if (temp <= 18 ){
-                    BackgroundJob.updateNotification({ taskDesc: "Đại zương cứu Em zới. Em lạnh quá à~" })
+                    showNotification("Thời tiết", "Đại zương cứu Em zới. Em lạnh quá à~")
+                    BackgroundJob.updateNotification({ taskDesc: "Đại zương cứu Em zới. Em lạnh quá à~" + localtime })
                 }else{
-                    BackgroundJob.updateNotification({ taskDesc: "Ngày hôm nay khá mát Đại Zương nhể..." })
+                    showNotification("Thời tiết", "Ngày hôm nay khá mát Đại Zương nhể...");
+                    BackgroundJob.updateNotification({ taskDesc: "Ngày hôm nay khá mát Đại Zương nhể... " + localtime})
                 }
                 console.log(temp + ":" + i)
                 console.log(name);
@@ -58,7 +67,7 @@ const MyService = (props) => {
         },
         color: '#ff00ff',
         parameters: {
-            delay: 3000,
+            delay: 300000,
         },
     };
 
@@ -69,6 +78,7 @@ const MyService = (props) => {
         await BackgroundJob.stop();
     }
     return (
+        
         <SafeAreaView style={styles.container}>
             <View >
                 <Text style = {styles.searchBy}>Search By</Text>
